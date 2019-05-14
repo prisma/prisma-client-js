@@ -1,9 +1,0 @@
-prototype: true
-databases:
-  default:
-    connector: sqlite-native
-    databaseFile: ./db/default_default.db
-    migrations: true
-    active: true
-    rawAccess: true
-    # database: Chinook
