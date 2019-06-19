@@ -11,3 +11,5 @@ git clone git@github.com:prisma/photonjs.git
 Install Node dependencies:
 
 ```
+yarn install
+```
