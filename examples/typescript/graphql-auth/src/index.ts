@@ -5,13 +5,13 @@ import { permissions } from './permissions'
 import * as allTypes from './resolvers'
 import Photon from '@generated/photon'
 import { Context } from './types'
-import { nexusPrismaMethod } from '@generated/nexus-prisma'
+import { nexusPrismaPlugin } from '@generated/nexus-prisma'
 
 const photon = new Photon({
   debug: true,
 })
 
-const nexusPrisma = nexusPrismaMethod({
+const nexusPrisma = nexusPrismaPlugin({
   photon: (ctx: Context) => ctx.photon,
 })
 
