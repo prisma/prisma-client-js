@@ -2,12 +2,6 @@ const { verify } = require('jsonwebtoken')
 
 const APP_SECRET = 'appsecret321'
 
-class AuthError extends Error {
-  constructor() {
-    super('Not authorized')
-  }
-}
-
 function getUserId(context) {
   const Authorization = context.request.get('Authorization')
   if (Authorization) {
@@ -18,6 +12,6 @@ function getUserId(context) {
 }
 
 module.exports = {
-  getUserId,
   APP_SECRET,
+  getUserId,
 }

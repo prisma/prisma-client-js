@@ -8,9 +8,11 @@ const rules = {
   }),
   isPostOwner: rule()(async (parent, { id }, context) => {
     const userId = getUserId(context)
-    const author = await context.prisma
-      .post({
-        id,
+    const author = await context.photon.posts
+      .findOne({
+        where: {
+          id,
+        },
       })
       .author()
     return userId === author.id
