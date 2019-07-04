@@ -4,7 +4,7 @@ This example shows how to implement a **gRPC API with TypeScript** and [Photon J
 
 ## How to use
 
-### 1. Download example & install dependencies
+### 1. Download example
 
 Clone the repository:
 
@@ -12,19 +12,14 @@ Clone the repository:
 git clone git@github.com:prisma/photonjs.git
 ```
 
-Install Node dependencies:
-
-```
-cd photonjs/examples/typescript/grpc
-npm install
-```
-
-### 2. Install the Prisma 2 CLI
+### 2. Install the Prisma 2 CLI & install dependencies 
 
 To run the example, you need the [Prisma 2 CLI](https://github.com/prisma/prisma2-docs/blob/master/prisma-2-cli.md):
 
 ```
 npm install -g prisma2
+cd photonjs/examples/typescript/grpc
+npm install
 ```
 
 ### 3. Set up database
@@ -45,6 +40,8 @@ Run the following command to generate [Photon JS](https://photonjs.prisma.io/):
 ```
 prisma2 generate
 ```
+
+<sup>(Please note that it's not really to generate since it was done on postinstall)</sup>
 
 Now you can seed your database using the `seed` script from `package.json`:
 
