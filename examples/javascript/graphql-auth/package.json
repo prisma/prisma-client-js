@@ -14,5 +14,8 @@
   },
   "devDependencies": {
     "ts-node": "^8.3.0"
+  },
+  "resolutions": {
+    "graphql-middleware": "3.0.1"
   }
 }
