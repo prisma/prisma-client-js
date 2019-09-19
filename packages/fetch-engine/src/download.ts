@@ -35,6 +35,13 @@ export interface DownloadOptions {
   version?: string
 }
 
+export interface BinaryMergedOptions {
+  binaryName: BinaryKind
+  targetDir: string
+  platforms?: Platform[]
+  version?: string
+}
+
 interface DownloadBinaryOptions {
   sourcePath: string
   targetPath: string
@@ -45,18 +52,34 @@ interface DownloadBinaryOptions {
 }
 
 export async function download(options: DownloadOptions) {
-  const mergedOptions = {
-    platforms: [await getPlatform()],
-    version: 'latest',
-    ...options,
-  }
-  const plural = mergedOptions.platforms.length > 1 ? 'ies' : 'y'
+  const detectedPlatform = await getPlatform();
+  const mergedOptions = Object.keys(options.binaries).reduce((opts, binaryName) => {
+    const envName = `PRISMA_${binaryName.replace(/\-/g, '_').toUpperCase()}_BINARY`;
+    return Object.assign(opts, {
+      [binaryName]: {
+        binaryName,
+        targetDir: options.binaries[binaryName],
+        platforms: [process.env[envName] ? detectedPlatform],
+        version: 'latest',
+        ...options,
+      }
+    });
+  }, {});
+
+  const platforms = Object.keys(mergedOptions).reduce((platforms, name) => {
+    return platforms.concat(mergedOptions[name].platforms);
+  }, []).filter((platform, index, self) => {
+    return self.indexOf(platform) === index;
+  });
+  
+  const plural = platforms.length > 1 ? 'ies' : 'y'
   const bar = options.showProgress
-    ? getBar(`Downloading ${mergedOptions.platforms.map(p => chalk.bold(p)).join(' and ')} binar${plural}`)
+    ? getBar(`Downloading ${platforms.map(p => chalk.bold(p)).join(' and ')} binar${plural}`)
     : undefined
   const progressMap: { [key: string]: number } = {}
   // Object.values is faster than Object.keys
-  const numDownloads = Object.values(mergedOptions.binaries).length * Object.values(mergedOptions.platforms).length
+  const numDownloads = Object.values(mergedOptions)
+    .reduce((count: number = 0, { platforms = [] }) => count + platforms.length, 0);
   const collectiveCallback =
     options.progressCb || options.showProgress
       ? (sourcePath: string) => progress => {
@@ -75,24 +98,21 @@ export async function download(options: DownloadOptions) {
         }
       : undefined
 
-  await Promise.all(
-    Object.entries(options.binaries).map(([binaryName, targetDir]) => {
-      return Promise.all(
-        mergedOptions.platforms.map(async platform => {
-          const sourcePath = getDownloadUrl(channel, mergedOptions.version, platform, binaryName as BinaryKind)
-          const targetPath = path.resolve(targetDir, getBinaryName(binaryName, platform))
-          await downloadBinary({
-            sourcePath,
-            binaryName: binaryName as BinaryKind,
-            platform,
-            version: mergedOptions.version,
-            targetPath,
-            progressCb: collectiveCallback ? collectiveCallback(sourcePath) : undefined,
-          })
-        }),
-      )
-    }),
-  )
+  await Promise.all(Object.values(mergedOptions).map((mergedOptions: BinaryMergedOptions) => {
+    const { binaryName, targetDir, platforms = [], version } = mergedOptions;
+    return Promise.all(platforms.map(async platform => {
+      const sourcePath = getDownloadUrl(channel, version, platform, binaryName as BinaryKind)
+      const targetPath = path.resolve(targetDir, getBinaryName(binaryName, platform))
+      await downloadBinary({
+        sourcePath,
+        binaryName: binaryName as BinaryKind,
+        platform,
+        version,
+        targetPath,
+        progressCb: collectiveCallback ? collectiveCallback(sourcePath) : undefined,
+      })
+    }));
+  }));
 
   if (bar) {
     bar.update(1)
