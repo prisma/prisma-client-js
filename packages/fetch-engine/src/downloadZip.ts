@@ -9,7 +9,6 @@ export async function downloadZip(url: string, target: string, progressCb?: (pro
   const result = await retry(
     async () => {
       try {
-        console.log({ agent: getProxyAgent(url) })
         const resp = await fetch(url, { compress: false, agent: getProxyAgent(url) })
 
         if (resp.status !== 200) {

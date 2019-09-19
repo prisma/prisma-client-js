@@ -15,23 +15,23 @@ function formatHostname(hostname) {
 function parseNoProxyZone(zone) {
   zone = zone.trim().toLowerCase()
 
-  var zoneParts = zone.split(':', 2)
-  var zoneHost = formatHostname(zoneParts[0])
-  var zonePort = zoneParts[1]
-  var hasPort = zone.indexOf(':') > -1
+  const zoneParts = zone.split(':', 2)
+  const zoneHost = formatHostname(zoneParts[0])
+  const zonePort = zoneParts[1]
+  const hasPort = zone.indexOf(':') > -1
 
   return { hostname: zoneHost, port: zonePort, hasPort: hasPort }
 }
 
 function uriInNoProxy(uri, noProxy) {
-  var port = uri.port || (uri.protocol === 'https:' ? '443' : '80')
-  var hostname = formatHostname(uri.hostname)
-  var noProxyList = noProxy.split(',')
+  const port = uri.port || (uri.protocol === 'https:' ? '443' : '80')
+  const hostname = formatHostname(uri.hostname)
+  const noProxyList = noProxy.split(',')
 
   // iterate through the noProxyList until it finds a match.
   return noProxyList.map(parseNoProxyZone).some(function(noProxyZone) {
-    var isMatchedAt = hostname.indexOf(noProxyZone.hostname)
-    var hostnameMatched = isMatchedAt > -1 && isMatchedAt === hostname.length - noProxyZone.hostname.length
+    const isMatchedAt = hostname.indexOf(noProxyZone.hostname)
+    const hostnameMatched = isMatchedAt > -1 && isMatchedAt === hostname.length - noProxyZone.hostname.length
 
     if (noProxyZone.hasPort) {
       return port === noProxyZone.port && hostnameMatched
@@ -46,7 +46,7 @@ function getProxyFromURI(uri) {
   // environmental variables (NO_PROXY, HTTP_PROXY, etc.)
   // respect NO_PROXY environment variables (see: http://lynx.isc.org/current/breakout/lynx_help/keystrokes/environments.html)
 
-  var noProxy = process.env.NO_PROXY || process.env.no_proxy || ''
+  const noProxy = process.env.NO_PROXY || process.env.no_proxy || ''
 
   // if the noProxy is a wildcard then return null
 
