@@ -41,11 +41,23 @@ export interface EngineConfig {
 const knownPlatforms = [
   'native',
   'darwin',
+  'windows',
   'linux-glibc-libssl1.0.1',
   'linux-glibc-libssl1.0.2',
   'linux-glibc-libssl1.1.0',
   'linux-musl-libssl1.1.0',
 ]
+
+const getQueryEngine = (platform: string, prefix: string = __dirname): string => {
+  let queryEnginePath = path.join(prefix, `query-engine-${platform}`)
+
+  if (platform === 'windows') {
+    queryEnginePath = `${queryEnginePath}.exe`
+  }
+
+  return queryEnginePath
+}
+
 export class NodeEngine extends Engine {
   private logEmitter: EventEmitter
   port?: number
@@ -158,9 +170,9 @@ You may have to run ${chalk.greenBright('prisma2 generate')} for your changes to
 
     const fileName = eval(`path.basename(__filename)`)
     if (fileName === 'NodeEngine.js') {
-      return path.join(__dirname, `../query-engine-${this.platform}`)
+      return getQueryEngine(this.platform, path.resolve(__dirname, `..`))
     } else {
-      return path.join(__dirname, `query-engine-${this.platform}`)
+      return getQueryEngine(this.platform)
     }
   }
 
@@ -170,7 +182,7 @@ You may have to run ${chalk.greenBright('prisma2 generate')} for your changes to
   private async resolveAlternativeBinaryPath(): Promise<string | null> {
     const binariesExist = await Promise.all(
       knownPlatforms.slice(1).map(async platform => {
-        const filePath = path.join(__dirname, `query-engine-${platform}`)
+        const filePath = getQueryEngine(platform)
         return {
           exists: await exists(filePath),
           platform,
