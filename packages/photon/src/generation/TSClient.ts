@@ -769,6 +769,11 @@ ${f.name}<T extends ${getFieldArgName(f)} = {}>(args?: Subset<T, ${getFieldArgNa
   const path = [...this._path, prefix, '${f.name}']
   const newArgs = deepSet(this._args, path, args || true)
   this._isList = ${f.outputType.isList}
+
+  if (this._document.type === 'mutation'){
+    this._requestPromise = this._fetcher.request<T>(this._document, this._path, this._rootField, '${name}', this._isList, this._callsite)
+  }
+
   return new ${getFieldTypeName(f)}Client<${getSelectReturnType({
         name: fieldTypeName,
         actionName: f.outputType.isList ? DMMF.ModelAction.findMany : DMMF.ModelAction.findOne,
