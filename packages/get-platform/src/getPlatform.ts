@@ -56,7 +56,7 @@ export async function resolveDistro(): Promise<undefined | GetOSResult['distro']
     idLike.includes('centos') ||
     idLike.includes('fedora') ||
     idLike.includes('rhel') ||
-    id === 'fedora'
+    id.includes('fedora')
   ) {
     return { base: 'rhel' }
   }
@@ -64,7 +64,7 @@ export async function resolveDistro(): Promise<undefined | GetOSResult['distro']
   if (
     idLike.includes('debian') ||
     idLike.includes('ubuntu') ||
-    id === 'debian'
+    id.includes('debian')
   ) {
     return { base: 'debian' }
   }
