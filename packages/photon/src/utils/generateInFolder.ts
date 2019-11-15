@@ -4,6 +4,9 @@ import fs from 'fs'
 import path from 'path'
 import { performance } from 'perf_hooks'
 import { generateClient } from '../generation/generateClient'
+import { getPackedPackage } from '@prisma/sdk'
+import Debug from 'debug'
+const debug = Debug('generateInFolder')
 
 export interface GenerateInFolderOptions {
   projectDir: string
@@ -18,7 +21,9 @@ export async function generateInFolder({
 }: GenerateInFolderOptions): Promise<number> {
   const before = performance.now()
   if (!projectDir) {
-    throw new Error(`Project dir missing. Usage: ts-node examples/generate.ts examples/accounts`)
+    throw new Error(
+      `Project dir missing. Usage: ts-node examples/generate.ts examples/accounts`,
+    )
   }
   if (!fs.existsSync(projectDir)) {
     throw new Error(`Path ${projectDir} does not exist`)
@@ -29,14 +34,20 @@ export async function generateInFolder({
   const dmmf = await getDMMF({ datamodel })
   const config = await getConfig({ datamodel })
 
-  const outputDir = path.join(projectDir, '@generated/photon')
+  const outputDir = path.join(projectDir, 'node_modules/@prisma/photon')
+  await getPackedPackage('@prisma/photon', outputDir)
 
   const platform = await getPlatform()
 
   await generateClient({
     binaryPaths: {
       queryEngine: {
-        [platform]: path.join(__dirname, `../../query-engine-${platform}${platform === 'windows' ? '.exe' : ''}`),
+        [platform]: path.join(
+          __dirname,
+          `../../query-engine-${platform}${
+            platform === 'windows' ? '.exe' : ''
+          }`,
+        ),
       },
     },
     datamodel,
@@ -44,14 +55,19 @@ export async function generateInFolder({
     ...config,
     outputDir,
     schemaDir: path.dirname(schemaPath),
-    runtimePath: useLocalRuntime ? path.relative(outputDir, path.join(__dirname, '../runtime')) : undefined,
+    runtimePath: useLocalRuntime
+      ? path.relative(outputDir, path.join(__dirname, '../runtime'))
+      : undefined,
     transpile,
     testMode: true,
     datamodelPath: schemaPath,
+    copyRuntime: false,
   })
 
-  const after = performance.now()
-  return after - before
+  const time = performance.now() - before
+  debug(`Done generating client in ${time}`)
+
+  return time
 }
 
 function getSchemaPath(projectDir: string) {
@@ -61,5 +77,7 @@ function getSchemaPath(projectDir: string) {
   if (fs.existsSync(path.join(projectDir, 'prisma/schema.prisma'))) {
     return path.join(projectDir, 'prisma/schema.prisma')
   }
-  throw new Error(`Could not find any schema.prisma in ${projectDir} or sub directories.`)
+  throw new Error(
+    `Could not find any schema.prisma in ${projectDir} or sub directories.`,
+  )
 }
