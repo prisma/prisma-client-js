@@ -72,7 +72,7 @@ export async function resolveDistro(): Promise<undefined | GetOSResult['distro']
   return
 }
 
-// getLibSslVersion returns the OpenSSL version excluding the patch version, e.g. "1.1"
+// getLibSslVersion returns the OpenSSL version excluding the patch version, e.g. "1.1.x"
 export async function getLibSslVersion(): Promise<string | undefined> {
   const [version, ls] = await Promise.all([
     gracefulExec(`openssl version -v`),
@@ -88,14 +88,14 @@ export async function getLibSslVersion(): Promise<string | undefined> {
   if (version) {
     const match = /^OpenSSL\s(\d+\.\d+)\.\d+/.exec(version)
     if (match) {
-      return match[1]
+      return match[1] + '.x'
     }
   }
 
   if (ls) {
     const match = /libssl\.so\.(\d+\.\d+)\.\d+/.exec(ls)
     if (match) {
-      return match[1]
+      return match[1] + '.x'
     }
   }
 
