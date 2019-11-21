@@ -1,20 +1,20 @@
 import { parseDistro } from '../getPlatform'
 
 const tests = [{
-	name: 'simple',
-	content: `
+  name: 'simple',
+  content: `
 ID=debian
   `,
-	expect: 'debian',
+  expect: 'debian',
 }, {
-	name: 'simple with quotes',
-	content: `
+  name: 'simple with quotes',
+  content: `
 ID="debian"
   `,
-	expect: 'debian',
+  expect: 'debian',
 }, {
-	name: 'debian',
-	content: `
+  name: 'debian',
+  content: `
 PRETTY_NAME="Debian GNU/Linux 10 (buster)"
 NAME="Debian GNU/Linux"
 VERSION_ID="10"
@@ -22,10 +22,10 @@ VERSION="10 (buster)"
 VERSION_CODENAME=buster
 ID=debian
   `,
-	expect: 'debian',
+  expect: 'debian',
 }, {
-	name: 'ubuntu',
-	content: `
+  name: 'ubuntu',
+  content: `
 NAME="Ubuntu"
 VERSION="18.04.3 LTS (Bionic Beaver)"
 ID=ubuntu
@@ -35,10 +35,10 @@ VERSION_ID="18.04"
 VERSION_CODENAME=bionic
 UBUNTU_CODENAME=bionic
   `,
-	expect: 'debian',
+  expect: 'debian',
 }, {
-	name: 'amazon linux 1',
-	content: `
+  name: 'amazon linux 1',
+  content: `
 NAME="Amazon Linux AMI"
 VERSION="2018.03"
 ID="amzn"
@@ -48,10 +48,10 @@ PRETTY_NAME="Amazon Linux AMI 2018.03"
 ANSI_COLOR="0;33"
 CPE_NAME="cpe:o:amazon:linux:2018.03:ga"
   `,
-	expect: 'rhel',
+  expect: 'rhel',
 }, {
-	name: 'amazon linux 2',
-	content: `
+  name: 'amazon linux 2',
+  content: `
 NAME="Amazon Linux"
 VERSION="2"
 ID="amzn"
@@ -61,10 +61,10 @@ PRETTY_NAME="Amazon Linux 2"
 ANSI_COLOR="0;33"
 CPE_NAME="cpe:2.3:o:amazon:amazon_linux:2"
   `,
-	expect: 'rhel',
+  expect: 'rhel',
 }, {
-	name: 'centos',
-	content: `
+  name: 'centos',
+  content: `
 NAME="CentOS Linux"
 VERSION="8 (Core)"
 ID="centos"
@@ -72,10 +72,10 @@ ID_LIKE="rhel fedora"
 VERSION_ID="8"
 PLATFORM_ID="platform:el8"
   `,
-	expect: 'rhel',
+  expect: 'rhel',
 }, {
-	name: 'fedora',
-	content: `
+  name: 'fedora',
+  content: `
 NAME=Fedora
 VERSION="31 (Container Image)"
 ID=fedora
@@ -86,10 +86,10 @@ PRETTY_NAME="Fedora 31 (Container Image)"
 ANSI_COLOR="0;34"
 LOGO=fedora-logo-icon
   `,
-	expect: 'rhel',
+  expect: 'rhel',
 }, {
-	name: 'arch linux',
-	content: `
+  name: 'arch linux',
+  content: `
 NAME="Arch Linux"
 PRETTY_NAME="Arch Linux"
 ID=arch
@@ -97,10 +97,10 @@ BUILD_ID=rolling
 ANSI_COLOR="0;36"
 LOGO=archlinux
   `,
-	expect: undefined, // this will default to debian later.
+  expect: undefined, // this will default to debian later.
 }, {
-	name: 'linux mint',
-	content: `
+  name: 'linux mint',
+  content: `
 NAME="Linux Mint"
 VERSION="18.2 (Sonya)"
 ID=linuxmint
@@ -110,7 +110,7 @@ VERSION_ID="18.2"
 VERSION_CODENAME=sonya
 UBUNTU_CODENAME=xenial
   `,
-	expect: 'debian',
+  expect: 'debian',
 }]
 
 let fail = false
@@ -118,16 +118,16 @@ let fail = false
 for (const t of tests) {
   const actual = parseDistro(t.content)
   if (actual !== t.expect) {
-    console.log(t.name, 'expected', t.expect, 'but is', actual)
+    console.log('distros', t.name, 'expected', t.expect, 'but is', actual)
     fail = true
   } else {
-		console.log(t.name, 'success')
-	}
+    console.log('distros', t.name, 'success')
+  }
 }
 
 if (fail) {
-  console.log('failed')
+  console.log('distros', 'failed')
   process.exit(1)
 } else {
-  console.log('success')
+  console.log('distros', 'success')
 }

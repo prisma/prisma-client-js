@@ -74,6 +74,15 @@ export async function resolveDistro(): Promise<
   return parseDistro(file)
 }
 
+export function parseOpenSSLVersion(input: string): string | undefined {
+  const match = /^OpenSSL\s(\d+\.\d+)\.\d+/.exec(input)
+  if (match) {
+    return match[1] + '.x'
+  }
+
+  return
+}
+
 // getOpenSSLVersion returns the OpenSSL version excluding the patch version, e.g. "1.1.x"
 export async function getOpenSSLVersion(): Promise<string | undefined> {
   const [version, ls] = await Promise.all([
@@ -88,9 +97,9 @@ export async function getOpenSSLVersion(): Promise<string | undefined> {
   debug({ ls })
 
   if (version) {
-    const match = /^OpenSSL\s(\d+\.\d+)\.\d+/.exec(version)
-    if (match) {
-      return match[1] + '.x'
+    const v = parseOpenSSLVersion(version)
+    if (v) {
+      return v
     }
   }
 
