@@ -72,7 +72,7 @@ You can find comprehensive documentation for Photon in the [Prisma 2 docs](https
 Here are few example API calls:
 
 ```ts
-import Photon from '@generated/photon'
+import Photon from '@prisma/photon'
 
 const photon = new Photon()
 
@@ -245,7 +245,7 @@ Photon is generated based on the [data model definition](https://github.com/pris
 - Relations and transactions
 - Raw database access
 
-Photon.js gets generated into your `node_modules` folder so you can import it directly from `'@generated/photon'`. There's no need to install any additional dependencies or database drivers.
+Photon.js gets generated into your `node_modules` folder so you can import it directly from `'@prisma/photon'`. There's no need to install any additional dependencies or database drivers.
 
 ### 4. Build an app
 
