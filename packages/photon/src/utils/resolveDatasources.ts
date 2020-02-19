@@ -48,13 +48,15 @@ export function absolutizeSqliteRelativePath(url: string, cwd: string, outputDir
 
 export function absolutizePostgreSQLRelativePath(url: string, cwd: string, outputDir: string): string {
   const credentials = uriToCredentials(url)
-
+  
   if (credentials.extraFields?.sslcert) {
-    credentials.extraFields.sslcert = path.resolve(cwd, credentials.extraFields.sslcert)
+    const absoluteTarget = path.resolve(cwd, credentials.extraFields.sslcert)
+    credentials.extraFields.sslcert = path.relative(outputDir, absoluteTarget)
   }
 
   if (credentials.extraFields?.sslidentity) {
-    credentials.extraFields.sslidentity = path.resolve(cwd, credentials.extraFields.sslidentity)
+    const absoluteTarget = path.resolve(cwd, credentials.extraFields.sslidentity)
+    credentials.extraFields.sslidentity = path.relative(outputDir, absoluteTarget)
   }
 
   return credentialsToUri(credentials)
