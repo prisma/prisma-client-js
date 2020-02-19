@@ -38,13 +38,13 @@ test('absolutizeSqliteRelativePath', () => {
 
 test('absolutizeSqliteRelativePath', () => {
   expect(absolutizePostgreSQLRelativePath('postgresql://postgres:password@localhost:5432/mydb?schema=public&sslmode=require&sslidentity=client-identity.p12&sslpassword=mysslpassword&sslcert=server-ca.pem', cwd, outputDir)).toMatchInlineSnapshot(
-    `"postgresql://postgres:password@localhost:5432/mydb?schema=public&sslmode=require&sslidentity=/Users/tim/project/prisma/client-identity.p12&sslpassword=mysslpassword&sslcert=/Users/tim/project/prisma/server-ca.pem"`,
+    `"postgresql://postgres:password@localhost:5432/mydb?schema=public&sslmode=require&sslidentity=../../../../prisma/client-identity.p12&sslpassword=mysslpassword&sslcert=../../../../prisma/server-ca.pem"`,
   )
   expect(absolutizePostgreSQLRelativePath('postgresql://postgres:password@localhost:5432/mydb?schema=public&sslmode=require&sslidentity=./client-identity.p12&sslpassword=mysslpassword&sslcert=./server-ca.pem', cwd, outputDir)).toMatchInlineSnapshot(
-    `"postgresql://postgres:password@localhost:5432/mydb?schema=public&sslmode=require&sslidentity=/Users/tim/project/prisma/client-identity.p12&sslpassword=mysslpassword&sslcert=/Users/tim/project/prisma/server-ca.pem"`,
+    `"postgresql://postgres:password@localhost:5432/mydb?schema=public&sslmode=require&sslidentity=../../../../prisma/client-identity.p12&sslpassword=mysslpassword&sslcert=../../../../prisma/server-ca.pem"`,
   )
   expect(absolutizePostgreSQLRelativePath('postgresql://postgres:password@localhost:5432/mydb?schema=public&sslmode=require&sslidentity=../client-identity.p12&sslpassword=mysslpassword&sslcert=../server-ca.pem', cwd, outputDir)).toMatchInlineSnapshot(
-    `"postgresql://postgres:password@localhost:5432/mydb?schema=public&sslmode=require&sslidentity=/Users/tim/project/client-identity.p12&sslpassword=mysslpassword&sslcert=/Users/tim/project/server-ca.pem"`,
+    `"postgresql://postgres:password@localhost:5432/mydb?schema=public&sslmode=require&sslidentity=../../../../client-identity.p12&sslpassword=mysslpassword&sslcert=../../../../server-ca.pem"`,
   )
 })
 
