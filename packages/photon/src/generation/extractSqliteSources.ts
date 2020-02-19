@@ -1,4 +1,4 @@
-import { absolutizeRelativePath } from '../utils/resolveDatasources'
+import { absolutizeSqliteRelativePath } from '../utils/resolveDatasources'
 
 export interface DatasourceOverwrite {
   name: string
@@ -42,7 +42,7 @@ export function extractSqliteSources(datamodel: string, cwd: string, outputDir: 
       if (startMatch) {
         overrides.push({
           name: startMatch[1],
-          url: absolutizeRelativePath(match[1], cwd, outputDir),
+          url: absolutizeSqliteRelativePath(match[1], cwd, outputDir),
         })
       } else {
         throw new Error(`Could not parse datamodel, line ${searchIndex + 1}: \`${startLine}\` is not parseable`)

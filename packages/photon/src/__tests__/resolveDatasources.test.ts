@@ -1,37 +1,37 @@
 import { DataSource } from '@prisma/generator-helper'
 import { datasourceToDatasourceOverwrite, serializeDatasources } from '../generation/serializeDatasources'
-import { absolutizeRelativePath, resolveDatasources } from '../utils/resolveDatasources'
+import { absolutizeSqliteRelativePath, resolveDatasources } from '../utils/resolveDatasources'
 
 const cwd = '/Users/tim/project/prisma'
 const outputDir = '/Users/tim/project/node_modules/@prisma/client/runtime'
 
-test('absolutizeRelativePath', () => {
-  expect(absolutizeRelativePath('file:db.db', cwd, outputDir)).toMatchInlineSnapshot(
+test('absolutizeSqliteRelativePath', () => {
+  expect(absolutizeSqliteRelativePath('file:db.db', cwd, outputDir)).toMatchInlineSnapshot(
     `"'file:' + path.resolve(__dirname, '../../../../prisma/db.db')"`,
   )
-  expect(absolutizeRelativePath('file:/db.db', cwd, outputDir)).toMatchInlineSnapshot(
+  expect(absolutizeSqliteRelativePath('file:/db.db', cwd, outputDir)).toMatchInlineSnapshot(
     `"'file:' + path.resolve(__dirname, '../../../../../../../db.db')"`,
   )
-  expect(absolutizeRelativePath('file:../db.db', cwd, outputDir)).toMatchInlineSnapshot(
+  expect(absolutizeSqliteRelativePath('file:../db.db', cwd, outputDir)).toMatchInlineSnapshot(
     `"'file:' + path.resolve(__dirname, '../../../../db.db')"`,
   )
-  expect(absolutizeRelativePath('file:./db.db', cwd, outputDir)).toMatchInlineSnapshot(
+  expect(absolutizeSqliteRelativePath('file:./db.db', cwd, outputDir)).toMatchInlineSnapshot(
     `"'file:' + path.resolve(__dirname, '../../../../prisma/db.db')"`,
   )
 
-  expect(absolutizeRelativePath('file:asd/another/dir/db.db', cwd, outputDir)).toMatchInlineSnapshot(
+  expect(absolutizeSqliteRelativePath('file:asd/another/dir/db.db', cwd, outputDir)).toMatchInlineSnapshot(
     `"'file:' + path.resolve(__dirname, '../../../../prisma/asd/another/dir/db.db')"`,
   )
-  expect(absolutizeRelativePath('file:/some/random/dir/db.db', cwd, outputDir)).toMatchInlineSnapshot(
+  expect(absolutizeSqliteRelativePath('file:/some/random/dir/db.db', cwd, outputDir)).toMatchInlineSnapshot(
     `"'file:' + path.resolve(__dirname, '../../../../../../../some/random/dir/db.db')"`,
   )
   expect(
-    absolutizeRelativePath('file:/Users/tim/project/node_modules/@prisma/client/runtime', cwd, outputDir),
+    absolutizeSqliteRelativePath('file:/Users/tim/project/node_modules/@prisma/client/runtime', cwd, outputDir),
   ).toMatchInlineSnapshot(`"'file:' + path.resolve(__dirname, '')"`)
-  expect(absolutizeRelativePath('file:../another-dir/db.db', cwd, outputDir)).toMatchInlineSnapshot(
+  expect(absolutizeSqliteRelativePath('file:../another-dir/db.db', cwd, outputDir)).toMatchInlineSnapshot(
     `"'file:' + path.resolve(__dirname, '../../../../another-dir/db.db')"`,
   )
-  expect(absolutizeRelativePath('file:./some/dir/db.db', cwd, outputDir)).toMatchInlineSnapshot(
+  expect(absolutizeSqliteRelativePath('file:./some/dir/db.db', cwd, outputDir)).toMatchInlineSnapshot(
     `"'file:' + path.resolve(__dirname, '../../../../prisma/some/dir/db.db')"`,
   )
 })

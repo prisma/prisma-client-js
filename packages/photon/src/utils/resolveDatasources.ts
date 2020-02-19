@@ -9,7 +9,7 @@ export function resolveDatasources(datasources: DataSource[], cwd: string, outpu
           ...datasource,
           url: {
             fromEnvVar: null,
-            value: absolutizeRelativePath(datasource.url.value, cwd, outputDir),
+            value: absolutizeSqliteRelativePath(datasource.url.value, cwd, outputDir),
           },
         }
       } else {
@@ -20,7 +20,7 @@ export function resolveDatasources(datasources: DataSource[], cwd: string, outpu
   })
 }
 
-export function absolutizeRelativePath(url: string, cwd: string, outputDir: string): string {
+export function absolutizeSqliteRelativePath(url: string, cwd: string, outputDir: string): string {
   let filePath = url
 
   if (filePath.startsWith('file:')) {
