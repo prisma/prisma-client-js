@@ -18,16 +18,11 @@ export function resolveDatasources(datasources: DataSource[], cwd: string, outpu
         return datasource
       }
     } else if (datasource.connectorType === 'postgresql') {
-      if (datasource.url.fromEnvVar === null) {
-        return {
-          ...datasource,
-          url: {
-            fromEnvVar: null,
-            value: absolutizePostgreSQLRelativePath(datasource.url.value, cwd, outputDir),
-          },
-        }
-      } else {
-        return datasource
+      return {
+        ...datasource,
+        url: {
+          value: absolutizePostgreSQLRelativePath(datasource.url.value, cwd, outputDir),
+        },
       }
     }
     return datasource
