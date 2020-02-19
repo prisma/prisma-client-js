@@ -1,7 +1,6 @@
 import { DataSource } from '@prisma/generator-helper'
-import { uriToCredentials } from '@prisma/sdk/src/convertCredentials'
+import { credentialsToUri, uriToCredentials } from '@prisma/sdk/src/convertCredentials'
 import path from 'path'
-import { credentialsToUri } from '@prisma/sdk'
 
 export function resolveDatasources(datasources: DataSource[], cwd: string, outputDir: string): DataSource[] {
   return datasources.map(datasource => {
