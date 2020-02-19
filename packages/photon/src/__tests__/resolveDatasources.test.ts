@@ -1,6 +1,6 @@
 import { DataSource } from '@prisma/generator-helper'
 import { datasourceToDatasourceOverwrite, serializeDatasources } from '../generation/serializeDatasources'
-import { absolutizeSqliteRelativePath, resolveDatasources } from '../utils/resolveDatasources'
+import { absolutizeSqliteRelativePath, resolveDatasources, absolutizePostgreSQLRelativePath } from '../utils/resolveDatasources'
 
 const cwd = '/Users/tim/project/prisma'
 const outputDir = '/Users/tim/project/node_modules/@prisma/client/runtime'
@@ -33,6 +33,18 @@ test('absolutizeSqliteRelativePath', () => {
   )
   expect(absolutizeSqliteRelativePath('file:./some/dir/db.db', cwd, outputDir)).toMatchInlineSnapshot(
     `"'file:' + path.resolve(__dirname, '../../../../prisma/some/dir/db.db')"`,
+  )
+})
+
+test('absolutizeSqliteRelativePath', () => {
+  expect(absolutizePostgreSQLRelativePath('postgresql://postgres:password@localhost:5432/mydb?schema=public&sslmode=require&sslidentity=client-identity.p12&sslpassword=mysslpassword&sslcert=server-ca.pem', cwd, outputDir)).toMatchInlineSnapshot(
+    `"postgresql://postgres:password@localhost:5432/mydb?schema=public&sslmode=require&sslidentity=/Users/tim/project/prisma/client-identity.p12&sslpassword=mysslpassword&sslcert=/Users/tim/project/prisma/server-ca.pem"`,
+  )
+  expect(absolutizePostgreSQLRelativePath('postgresql://postgres:password@localhost:5432/mydb?schema=public&sslmode=require&sslidentity=./client-identity.p12&sslpassword=mysslpassword&sslcert=./server-ca.pem', cwd, outputDir)).toMatchInlineSnapshot(
+    `"postgresql://postgres:password@localhost:5432/mydb?schema=public&sslmode=require&sslidentity=/Users/tim/project/prisma/client-identity.p12&sslpassword=mysslpassword&sslcert=/Users/tim/project/prisma/server-ca.pem"`,
+  )
+  expect(absolutizePostgreSQLRelativePath('postgresql://postgres:password@localhost:5432/mydb?schema=public&sslmode=require&sslidentity=../client-identity.p12&sslpassword=mysslpassword&sslcert=../server-ca.pem', cwd, outputDir)).toMatchInlineSnapshot(
+    `"postgresql://postgres:password@localhost:5432/mydb?schema=public&sslmode=require&sslidentity=/Users/tim/project/client-identity.p12&sslpassword=mysslpassword&sslcert=/Users/tim/project/server-ca.pem"`,
   )
 })
 

@@ -1,5 +1,7 @@
 import { DataSource } from '@prisma/generator-helper'
+import { uriToCredentials } from '@prisma/sdk/src/convertCredentials'
 import path from 'path'
+import { credentialsToUri } from '@prisma/sdk'
 
 export function resolveDatasources(datasources: DataSource[], cwd: string, outputDir: string): DataSource[] {
   return datasources.map(datasource => {
@@ -10,6 +12,18 @@ export function resolveDatasources(datasources: DataSource[], cwd: string, outpu
           url: {
             fromEnvVar: null,
             value: absolutizeSqliteRelativePath(datasource.url.value, cwd, outputDir),
+          },
+        }
+      } else {
+        return datasource
+      }
+    } else if (datasource.connectorType === 'postgresql') {
+      if (datasource.url.fromEnvVar === null) {
+        return {
+          ...datasource,
+          url: {
+            fromEnvVar: null,
+            value: absolutizePostgreSQLRelativePath(datasource.url.value, cwd, outputDir),
           },
         }
       } else {
@@ -30,4 +44,18 @@ export function absolutizeSqliteRelativePath(url: string, cwd: string, outputDir
   const absoluteTarget = path.resolve(cwd, filePath)
 
   return `'file:' + path.resolve(__dirname, '${path.relative(outputDir, absoluteTarget)}')`
+}
+
+export function absolutizePostgreSQLRelativePath(url: string, cwd: string, outputDir: string): string {
+  const credentials = uriToCredentials(url)
+
+  if (credentials.extraFields?.sslcert) {
+    credentials.extraFields.sslcert = path.resolve(cwd, credentials.extraFields.sslcert)
+  }
+
+  if (credentials.extraFields?.sslidentity) {
+    credentials.extraFields.sslidentity = path.resolve(cwd, credentials.extraFields.sslidentity)
+  }
+
+  return credentialsToUri(credentials)
 }
