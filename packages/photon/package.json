@@ -7,6 +7,7 @@
   "scripts": {
     "tsc": "tsc -d",
     "build": "pnpm run cleanup && pnpm run tsc && pnpm run ncc:runtime && pnpm run ncc:generator && cp scripts/backup-index.js index.js && cp scripts/backup-index.d.ts index.d.ts &&  cp scripts/any-index.js runtime/index.d.ts",
+    "eslint": "eslint -c .eslintrc.js --ext .ts src/",
     "test": "jest",
     "download": "node scripts/download.js",
     "generate": "node scripts/postinstall.js",
@@ -20,7 +21,7 @@
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
-      "tslint --project tsconfig.json -c tslint.json --fix",
+      "eslint --fix",
       "prettier --write",
       "git add"
     ]
@@ -54,12 +55,18 @@
     "@types/js-levenshtein": "^1.1.0",
     "@types/node": "^12.12.25",
     "@types/node-fetch": "^2.5.4",
+    "@typescript-eslint/eslint-plugin": "^2.20.0",
+    "@typescript-eslint/parser": "^2.20.0",
     "@zeit/ncc": "^0.20.5",
     "arg": "^4.1.2",
     "benchmark": "^2.1.4",
     "chalk": "^3.0.0",
     "del": "5.1.0",
     "dotenv": "^8.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-jsdoc": "^21.0.0",
+    "eslint-plugin-prettier": "^3.1.2",
     "execa": "3.3.0",
     "flat-map-polyfill": "^0.3.8",
     "fs-monkey": "^0.3.3",
@@ -83,8 +90,6 @@
     "ts-jest": "^24.3.0",
     "ts-loader": "^6.2.1",
     "ts-node": "^8.6.2",
-    "tslint": "^5.20.1",
-    "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.7.5",
     "webpack": "5.0.0-alpha.14",
     "webpack-bundle-analyzer": "^3.6.0",
