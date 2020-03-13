@@ -8,6 +8,7 @@ import Debug from 'debug'
 import makeDir from 'make-dir'
 import execa from 'execa'
 import pFilter from 'p-filter'
+import hasha from 'hasha'
 
 // Utils
 import { getBar } from './log'
@@ -251,6 +252,14 @@ async function binaryNeedsToBeDownloaded(
   }
 
   return false
+}
+
+export async function getChecksum(enginePath: string): Promise<string> {
+  const hash = await hasha.fromFile(enginePath, { algorithm: 'sha256' })
+
+  debug(`Getting checksum of ${enginePath}. Result: `, hash)
+
+  return hash
 }
 
 export async function getVersion(enginePath: string): Promise<string> {
