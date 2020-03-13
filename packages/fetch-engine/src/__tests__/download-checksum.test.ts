@@ -12,6 +12,10 @@ import retry from 'p-retry'
 import fetch from 'node-fetch'
 import { getProxyAgent } from '../getProxyAgent'
 
+const { pipeline } = require('stream')
+const { promisify } = require('util')
+const pipe = promisify(pipeline)
+
 jest.setTimeout(20000)
 
 describe('download', () => {
@@ -154,7 +158,8 @@ describe('download', () => {
     const queryEngineDestination = fs.createWriteStream(queryEnginePath)
     const gunzip = zlib.createGunzip()
     gunzip.on('error', console.error)
-    queryEngineGz.pipe(gunzip).pipe(queryEngineDestination)
+
+    await pipe(queryEngineGz, gunzip, queryEngineDestination)
 
     // Checksum check binary
     expect(await getChecksum(queryEnginePath)).toMatchInlineSnapshot(
