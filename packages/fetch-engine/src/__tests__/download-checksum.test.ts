@@ -15,10 +15,16 @@ import { getProxyAgent } from '../getProxyAgent'
 jest.setTimeout(20000)
 
 describe('download', () => {
-  beforeAll(async () => {
+  beforeEach(async () => {
     // completely clean up the cache and keep nothing
     await cleanupCache(0)
     await del(__dirname + '/**/*engine*')
+    await del(__dirname + '/**/*engine*.gz')
+  })
+
+  afterAll(async () => {
+    await del(__dirname + '/**/*engine*')
+    await del(__dirname + '/**/*engine*.gz')
   })
 
   test('basic download', async () => {
