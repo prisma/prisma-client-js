@@ -62,16 +62,92 @@ describe('download', () => {
     )
   })
 
-  test('download gz', async () => {
-    const platform = await getPlatform()
-    // const binaries = ['prisma', ]
-    const downloadUrl = getDownloadUrl('master', 'd3b0ceed5d87544b9d2decb70e08664f9047bb73', platform, 'prisma')
-    console.log(downloadUrl)
-    const queryEnginePath = path.join(__dirname, getBinaryName('query-engine', platform))
+  // test('download and unzip gz', async () => {
+  //   const platform = await getPlatform()
+  //   // const binaries = ['prisma', ]
+  //   const downloadUrl = getDownloadUrl('master', 'd3b0ceed5d87544b9d2decb70e08664f9047bb73', platform, 'prisma')
+  //   console.log(downloadUrl)
+  //   const queryEnginePath = path.join(__dirname, getBinaryName('query-engine', platform))
+  //   const queryEnginePathGz = queryEnginePath + '.gz'
+
+  //   // Download
+  //   const lastModified = await downloadZip(downloadUrl, queryEnginePathGz)
+
+  //   // Unzip
+  //   const queryEngineGz = fs.createReadStream(queryEnginePathGz)
+  //   const queryEngineDestination = fs.createWriteStream(queryEnginePath)
+  //   const gunzip = zlib.createGunzip()
+  //   gunzip.on('error', console.error)
+  //   queryEngineGz.pipe(gunzip).pipe(queryEngineDestination)
+
+  //   // Checksum check .gz
+  //   expect(await getChecksum(queryEnginePathGz)).toMatchInlineSnapshot(
+  //     `"2c8ba435f079bf9f4d508836a09f787a34228517dfa3e0dcded604a62c4f2630"`,
+  //   )
+  //   // Checksum check binary
+  //   expect(await getChecksum(queryEnginePath)).toMatchInlineSnapshot(
+  //     `"83322c943206f30778a5ae694c5fea6f9c994404c93676a27ad93ef6dff19ca1"`,
+  //   )
+
+  //   async function downloadZip(url: string, target: string, progressCb?: (progress: number) => any): Promise<string> {
+  //     const partial = target + '.partial'
+  //     const result = await retry(
+  //       async () => {
+  //         try {
+  //           const resp = await fetch(url, { compress: false, agent: getProxyAgent(url) })
+
+  //           if (resp.status !== 200) {
+  //             throw new Error(resp.statusText + ' ' + url)
+  //           }
+
+  //           const lastModified = resp.headers.get('last-modified')!
+  //           const size = parseFloat(resp.headers.get('content-length'))
+  //           const ws = fs.createWriteStream(partial)
+
+  //           return await new Promise((resolve, reject) => {
+  //             let bytesRead = 0
+
+  //             resp.body.on('error', reject).on('data', chunk => {
+  //               bytesRead += chunk.length
+
+  //               if (size && progressCb) {
+  //                 progressCb(bytesRead / size)
+  //               }
+  //             })
+
+  //             // const gunzip = zlib.createGunzip()
+  //             // gunzip.on('error', reject)
+  //             // resp.body.pipe(gunzip).pipe(ws)
+
+  //             // without unzip
+  //             resp.body.pipe(ws)
+
+  //             ws.on('error', reject).on('close', () => {
+  //               resolve(lastModified)
+  //             })
+  //           })
+  //         } finally {
+  //           //
+  //         }
+  //       },
+  //       {
+  //         retries: 0, // changed from 1 to 0
+  //         onFailedAttempt: err => console.error(err),
+  //       } as any,
+  //     )
+  //     fs.renameSync(partial, target)
+  //     return result as string
+  //   }
+  // })
+
+  test('only unzip local gz', async () => {
+    const queryEnginePath = path.join(__dirname, 'prisma')
     const queryEnginePathGz = queryEnginePath + '.gz'
 
-    // Download
-    const lastModified = await downloadZip(downloadUrl, queryEnginePathGz)
+    // Checksum check .gz
+    expect(await getChecksum(queryEnginePathGz)).toMatchInlineSnapshot(
+      `"2c8ba435f079bf9f4d508836a09f787a34228517dfa3e0dcded604a62c4f2630"`,
+    )
 
     // Unzip
     const queryEngineGz = fs.createReadStream(queryEnginePathGz)
@@ -80,63 +156,9 @@ describe('download', () => {
     gunzip.on('error', console.error)
     queryEngineGz.pipe(gunzip).pipe(queryEngineDestination)
 
-    // Checksum check .gz
-    expect(await getChecksum(queryEnginePathGz)).toMatchInlineSnapshot(
-      `"2c8ba435f079bf9f4d508836a09f787a34228517dfa3e0dcded604a62c4f2630"`,
-    )
     // Checksum check binary
     expect(await getChecksum(queryEnginePath)).toMatchInlineSnapshot(
       `"83322c943206f30778a5ae694c5fea6f9c994404c93676a27ad93ef6dff19ca1"`,
     )
-
-    async function downloadZip(url: string, target: string, progressCb?: (progress: number) => any): Promise<string> {
-      const partial = target + '.partial'
-      const result = await retry(
-        async () => {
-          try {
-            const resp = await fetch(url, { compress: false, agent: getProxyAgent(url) })
-
-            if (resp.status !== 200) {
-              throw new Error(resp.statusText + ' ' + url)
-            }
-
-            const lastModified = resp.headers.get('last-modified')!
-            const size = parseFloat(resp.headers.get('content-length'))
-            const ws = fs.createWriteStream(partial)
-
-            return await new Promise((resolve, reject) => {
-              let bytesRead = 0
-
-              resp.body.on('error', reject).on('data', chunk => {
-                bytesRead += chunk.length
-
-                if (size && progressCb) {
-                  progressCb(bytesRead / size)
-                }
-              })
-
-              // const gunzip = zlib.createGunzip()
-              // gunzip.on('error', reject)
-              // resp.body.pipe(gunzip).pipe(ws)
-
-              // without unzip
-              resp.body.pipe(ws)
-
-              ws.on('error', reject).on('close', () => {
-                resolve(lastModified)
-              })
-            })
-          } finally {
-            //
-          }
-        },
-        {
-          retries: 0, // changed from 1 to 0
-          onFailedAttempt: err => console.error(err),
-        } as any,
-      )
-      fs.renameSync(partial, target)
-      return result as string
-    }
   })
 })
