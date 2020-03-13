@@ -22,10 +22,10 @@ describe('download', () => {
     await del(__dirname + '/**/*engine*.gz')
   })
 
-  afterAll(async () => {
-    await del(__dirname + '/**/*engine*')
-    await del(__dirname + '/**/*engine*.gz')
-  })
+  // afterAll(async () => {
+  //   await del(__dirname + '/**/*engine*')
+  //   await del(__dirname + '/**/*engine*.gz')
+  // })
 
   test('basic download', async () => {
     const platform = await getPlatform()
@@ -64,15 +64,29 @@ describe('download', () => {
 
   test('download gz', async () => {
     const platform = await getPlatform()
+    // const binaries = ['prisma', ]
     const downloadUrl = getDownloadUrl('master', 'd3b0ceed5d87544b9d2decb70e08664f9047bb73', platform, 'prisma')
-    const queryEnginePathGz = path.join(__dirname, getBinaryName('query-engine', platform)) + '.gz'
+    console.log(downloadUrl)
+    const queryEnginePath = path.join(__dirname, getBinaryName('query-engine', platform))
+    const queryEnginePathGz = queryEnginePath + '.gz'
+
+    // Download
     const lastModified = await downloadZip(downloadUrl, queryEnginePathGz)
 
-    //
-    // Checksum check
-    //
+    // Unzip
+    const queryEngineGz = fs.createReadStream(queryEnginePathGz)
+    const queryEngineDestination = fs.createWriteStream(queryEnginePath)
+    const gunzip = zlib.createGunzip()
+    gunzip.on('error', console.error)
+    queryEngineGz.pipe(gunzip).pipe(queryEngineDestination)
+
+    // Checksum check .gz
     expect(await getChecksum(queryEnginePathGz)).toMatchInlineSnapshot(
       `"2c8ba435f079bf9f4d508836a09f787a34228517dfa3e0dcded604a62c4f2630"`,
+    )
+    // Checksum check binary
+    expect(await getChecksum(queryEnginePath)).toMatchInlineSnapshot(
+      `"83322c943206f30778a5ae694c5fea6f9c994404c93676a27ad93ef6dff19ca1"`,
     )
 
     async function downloadZip(url: string, target: string, progressCb?: (progress: number) => any): Promise<string> {
@@ -117,7 +131,7 @@ describe('download', () => {
           }
         },
         {
-          retries: 1,
+          retries: 0, // changed from 1 to 0
           onFailedAttempt: err => console.error(err),
         } as any,
       )
