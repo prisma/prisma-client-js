@@ -162,6 +162,7 @@ export function getSelectReturnType({
   isField = false,
 }: SelectReturnTypeOptions) {
   const isList = actionName === DMMF.ModelAction.findMany
+  const nullablePart = actionName === 'findOne' ? ' | null' : ''
 
   if (actionName === 'deleteMany' || actionName === 'updateMany') {
     return `Promise<BatchPayload>`
@@ -176,16 +177,12 @@ export function getSelectReturnType({
     const promiseOpen = renderPromise ? 'Promise<' : ''
     const promiseClose = renderPromise ? '>' : ''
 
-    return `CheckSelect<T, ${promiseOpen}${listOpen}${name}${listClose}${promiseClose}, ${promiseOpen}${listOpen}${getPayloadName(
+    return `CheckSelect<T, ${promiseOpen}${listOpen}${name}${listClose}${nullablePart}${promiseClose}, ${promiseOpen}${listOpen}${getPayloadName(
       name,
-    )}<T>${listClose}${promiseClose}>`
+    )}<T>${listClose}${nullablePart}${promiseClose}>`
   }
 
-  return `CheckSelect<T, ${name}Client<${getType(name, isList)}${
-    actionName === 'findOne' ? ' | null' : ''
-  }>, ${name}Client<${getType(getPayloadName(name) + '<T>', isList)}${
-    actionName === 'findOne' ? ' | null' : ''
-  }>>`
+  return `CheckSelect<T, ${name}Client<${getType(name, isList)}${nullablePart}>, ${name}Client<${getType(getPayloadName(name) + '<T>', isList)}${nullablePart}>>`
 }
 
 export function isQueryAction(
