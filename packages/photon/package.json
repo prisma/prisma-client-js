@@ -1,7 +1,7 @@
 {
   "name": "@prisma/client",
   "version": "2.0.0-alpha.977",
-  "description": "Prisma Client is an auto-generated query builder for TypeScript & Node.js it makes it easy to reason about database queries. No more debugging of SQL or complex ORM models – only an intuitive API and plain old JavaScript objects.",
+  "description": "Prisma Client is an auto-generated and type-safe query builder for Node.js & TypeScript that's tailored to your data.",
   "keywords": ["prisma2", "prisma", "client", "query", "database", "sql", "postgresql", "mysql", "sqlite", "mariadb", "typescript", "orm", "query-builder"],
   "main": "index.js",
   "types": "index.d.ts",
