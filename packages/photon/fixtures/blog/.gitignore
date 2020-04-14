@@ -1,4 +1,0 @@
-@prisma/**/*
-@prisma
-migrations
-.env*
