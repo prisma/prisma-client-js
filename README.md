@@ -42,5 +42,3 @@ Alternatively you can explore the ready-to-run [examples](https://github.com/pri
 ## Contributing
 
 Read more about how to contribute to Prisma Client JS [here](https://github.com/prisma/prisma-client-js/blob/master/CONTRIBUTING.md).
-
-[![Build status](https://badge.buildkite.com/fa6027d11848231f2bc194aaffcf5dbc2ee0a83d666af0806e.svg)](https://buildkite.com/prisma/prisma-client-js)
