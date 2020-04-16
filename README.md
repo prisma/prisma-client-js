@@ -41,4 +41,4 @@ Alternatively you can explore the ready-to-run [examples](https://github.com/pri
 
 ## Contributing
 
-Read more about how to contribute to Prisma Client JS [here](https://github.com/prisma/prisma-client-js/blob/master/CONTRIBUTING.md).
+Read more about how to contribute to Prisma Client JS [here](https://github.com/prisma/prisma/tree/master/src).
