@@ -42,3 +42,7 @@ Alternatively you can explore the ready-to-run [examples](https://github.com/pri
 ## Contributing
 
 Read more about how to contribute to Prisma Client JS [here](https://github.com/prisma/prisma/tree/master/src).
+
+## Security
+
+If you have a security issue to report, please contact us at [security@prisma.io](mailto:security@prisma.io?subject=[GitHub]%20Prisma%202%20Security%20Report%20)
