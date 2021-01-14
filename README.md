@@ -1,6 +1,6 @@
-### ⚠️ We've moved our issue and feature tracking for the Prisma JS Client to [prisma/prisma](https://github.com/prisma/prisma/issues?q=is%3Aopen+is%3Aissue+label%3A%22topic%3A+migrate%22+sort%3Aupdated-desc).
+### ⚠️ We've moved our issue and feature tracking for the Prisma JS Client to [prisma/prisma](https://github.com/prisma/prisma).
 
-Rest assured, the Prisma JS Client is alive and well. We're just archiving this repository to make it more clear for everyone where to open issues. See you over at [prisma/prisma](https://github.com/prisma/prisma/issues?q=is%3Aopen+is%3Aissue+label%3A%22topic%3A+migrate%22+sort%3Aupdated-desc)!
+Rest assured, the Prisma JS Client is alive and well. We're just archiving this repository to make it more clear for everyone where to open issues. See you over at [prisma/prisma](https://github.com/prisma/prisma/)!
 
 ---
 
