@@ -1,8 +1,11 @@
-![Prisma](https://i.imgur.com/SFzi1NE.png)
+**⚠️ We've centralizing our issue and feature tracking for Prisma in [prisma/prisma](https://github.com/prisma/prisma/issues?q=is%3Aopen+is%3Aissue+label%3A%22topic%3A+migrate%22+sort%3Aupdated-desc).**
+
+Rest assured, the Prisma Client is alive and well. We're just archiving this repository to make it more clear for everyone where to open issues. See you over at [prisma/prisma](https://github.com/prisma/prisma/issues?q=is%3Aopen+is%3Aissue+label%3A%22topic%3A+migrate%22+sort%3Aupdated-desc)!
+
+---
 
 <div align="center">
-  <h1>Prisma Client JS</h1>
-  <p><h3 align="center">Query builder for TypeScript & Node.js (ORM replacement)</h3></p>
+  <p><h3 align="center">Prisma Client JS: Query builder for TypeScript & Node.js (ORM replacement)</h3></p>
   <a href="https://www.prisma.io/docs/getting-started/quickstart">Quickstart</a>
   <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
   <a href="https://www.prisma.io/">Website</a>
